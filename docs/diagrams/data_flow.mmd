@@ -1,0 +1,10 @@
+
+sequenceDiagram
+    participant U as User
+    participant S as Scheduler
+    participant P as Pipeline
+    participant W as Warehouse
+    U->>S: Trigger
+    S->>P: Run extract->transform->load
+    P->>W: Upsert dims & facts
+    W->>U: Provide CSVs/insights

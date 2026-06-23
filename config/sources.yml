@@ -1,0 +1,13 @@
+sources:
+  rozee:
+    search_url: "https://www.rozee.pk/jobs/software-developer"
+    enabled: true
+  mustakbil:
+    search_url: "https://www.mustakbil.com/search/jobs?q=software+developer"
+    enabled: false
+  brightspyre:
+    search_url: "https://www.brightspyre.com/jobs?keywords=software"
+    enabled: false
+  remoteok:
+    api_url: "https://remoteok.com/api"
+    enabled: true

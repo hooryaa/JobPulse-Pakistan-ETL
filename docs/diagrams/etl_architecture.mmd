@@ -1,0 +1,7 @@
+
+graph TD
+  A[RemoteOK API] --> B[Raw JSON]
+  B --> C[Staging (parquet/csv)]
+  C --> D[Transform: normalize, extract skills]
+  D --> E[Warehouse (Postgres/SQLite)]
+  E --> F[Analytics & Power BI]

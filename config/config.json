@@ -1,0 +1,12 @@
+{
+  "default": {
+    "source": "remoteok",
+    "remoteok": {
+      "base_url": "https://remoteok.com/api",
+      "per_page": 100
+    },
+    "database": {
+      "url": "postgresql://localhost:5432/jobpulse"
+    }
+  }
+}

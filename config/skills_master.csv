@@ -1,0 +1,22 @@
+canonical_skill,aliases,category
+Python,python;py,Data Engineering
+SQL,sql;structured query language,Data Analytics
+Power BI,powerbi;power-bi;"microsoft power bi",Data Analytics
+Excel,excel;ms excel,Data Analytics
+AWS,aws;amazon web services,Cloud
+Azure,azure;microsoft azure,Cloud
+GCP,gcp;google cloud platform,Cloud
+PostgreSQL,postgresql;postgres,Databases
+MySQL,mysql,Databases
+Docker,docker,DevOps
+Airflow,airflow,Data Engineering
+Spark,spark;apache spark,Data Engineering
+dbt,dbt,Data Engineering
+Tableau,tableau,Data Analytics
+JavaScript,javascript;js,Software
+TypeScript,typescript;ts,Software
+React,react,Software
+Node.js,node;nodejs,node.js,Software
+Java,java,Software
+C#,csharp;c#,Software
+Go,go;golang,Software

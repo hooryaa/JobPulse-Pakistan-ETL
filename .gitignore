@@ -1,0 +1,50 @@
+__pycache__/
+.env
+.env.*
+logs/
+data/
+.vscode/
+*.pyc
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Virtual Env
+.venv/
+venv/
+
+# Environment
+.env
+
+# Logs
+logs/*.log
+
+# Databases
+*.db
+*.sqlite
+
+# Raw Data
+data/raw/*
+!data/raw/.gitkeep
+
+# Staging Data
+data/staging/*
+!data/staging/.gitkeep
+
+# Warehouse
+data/warehouse/*
+!data/warehouse/.gitkeep
+
+# Temporary Test Data
+tests/tmp_raw/
+tests/tmp_staging/
+
+# Reports
+reports/
+
+# Releases
+releases/
+
+# Power BI cache
+*.pbix.autosave

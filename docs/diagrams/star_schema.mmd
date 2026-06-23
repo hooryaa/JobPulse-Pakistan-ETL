@@ -1,0 +1,17 @@
+
+flowchart LR
+  subgraph Dimensions
+    DC[dim_company]
+    DJ[dim_job]
+    DL[dim_location]
+    DS[dim_skill]
+    DD[dim_date]
+  end
+  FP[fact_job_postings]
+  FS[fact_job_skills]
+  DC --> FP
+  DJ --> FP
+  DL --> FP
+  DD --> FP
+  FP --> FS
+  DS --> FS

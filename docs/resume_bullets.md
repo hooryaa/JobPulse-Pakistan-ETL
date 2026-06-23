@@ -1,0 +1,8 @@
+- Built an end-to-end ETL pipeline processing job market data using Python, pandas, and SQLite/PostgreSQL.
+- Designed and implemented a dimensional star schema for analytics-ready data modeling.
+- Implemented robust text normalization and Unicode cleanup to ensure clean entity names.
+- Developed advanced skill extraction and normalization logic to surface technology demand signals.
+- Created automated data quality checks and reporting to validate pipeline outputs.
+- Produced Power BI-ready datasets and visualization assets for recruiter-facing dashboards.
+- Generated narrative business insights and market summaries used to inform hiring strategies.
+- Ensured idempotent loads and dimension upserts for reliable repeatable pipeline runs.

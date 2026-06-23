@@ -1,0 +1,24 @@
+
+pandas>=2.0
+numpy>=1.24
+
+# Pin SQLAlchemy 2.0.x for maximum compatibility with common packages
+SQLAlchemy==2.0.21
+psycopg2-binary==2.9.12
+requests>=2.31
+python-dotenv>=1.0
+pydantic>=2.5
+
+# Utilities
+schedule==1.2.2
+
+# Testing
+pytest==7.4.2
+
+# Text cleaning and scraping
+ftfy>=6.0
+beautifulsoup4>=4.12
+rapidfuzz>=2.17
+
+# Optional: dbt for transformations (install separately if needed)
+dbt-core>=1.5

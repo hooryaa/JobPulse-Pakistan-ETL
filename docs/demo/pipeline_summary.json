@@ -1,0 +1,17 @@
+{
+  "pipeline_start": 1782206662.063814,
+  "pipeline_end": 1782206665.6059537,
+  "rows_extracted": 100,
+  "rows_transformed": 100,
+  "rows_loaded": 100,
+  "duration_seconds": 3.5421385765075684,
+  "quality": {
+    "rows_processed": 100,
+    "duplicates_removed": 0,
+    "null_titles": 0,
+    "null_companies": 0,
+    "invalid_salaries": 0,
+    "invalid_dates": 0,
+    "quality_score": 100.0
+  }
+}
