@@ -1,118 +1,297 @@
-# JobPulse — Job Market Intelligence (Recruiter Overview)
+# JobPulse Pakistan ETL & Analytics Platform
 
-JobPulse is a polished, recruiter-facing data engineering portfolio project that ingests job postings, extracts skills and metadata, and loads a dimensional (star) warehouse for analytics and dashboards.
+> End-to-end Data Engineering project that transforms raw job postings into analytics-ready business insights through automated ETL pipelines, dimensional modeling, data quality monitoring, and interactive Power BI dashboards.
 
-This README focuses on the product story, business value, and quick artifacts a recruiter or hiring manager will care about.
+## Overview
 
-**Quick demo (no Postgres required)**
+JobPulse is a job market intelligence platform designed to analyze hiring trends across Pakistan.
 
-1. Activate the venv.
-2. Run the demo (creates a local SQLite warehouse):
+The platform automatically ingests job postings, extracts technologies and business metadata, validates data quality, loads a dimensional warehouse, and exposes curated analytics for decision-makers through SQL and Power BI.
 
-```powershell
-python scripts/demo_run.py
-```
+### Business Questions Answered
 
-3. Generate recruiter-ready artifacts (CSV, JSON, charts):
-
-```powershell
-python scripts/generate_business_insights.py
-```
-
-Artifacts and visual assets are written to `docs/demo/` and diagrams to `docs/diagrams/`.
-
-**Where to look (high-value files)**
-
-- Architecture diagram: [docs/diagrams/etl_architecture.mmd](docs/diagrams/etl_architecture.mmd)
-- Star schema diagram: [docs/diagrams/star_schema.mmd](docs/diagrams/star_schema.mmd)
-- Business insights report: [docs/business_insights.md](docs/business_insights.md)
-- Demo artifacts and charts: [docs/demo/](docs/demo/)
-- SQL schema & migrations: [sql/schema.sql](sql/schema.sql)
-
-**Architecture (one-liner)**
-
-RemoteOK → Raw JSON → Staging (parquet/CSV) → Transform (normalize, extract skills) → Warehouse (star schema: dims + facts) → Analytics (CSV/Power BI)
-
-**Executive summary (what this project demonstrates)**
-
-- End-to-end ETL orchestration with idempotent loads and schema migrations.
-- Dimensional star schema (surrogate keys, PK/FK, indexes) suitable for analytics.
-- Skill extraction and many-to-many `fact_job_skills` for technology-demand analysis.
-- Data quality checks and structured pipeline reporting.
-- Analytics-ready CSV exports for Power BI and dashboarding.
-
-**Dashboard preview (examples in docs/demo/)**
-
-- `top_skills.png` — Top extracted skills (frequency)
-- `remote_distribution.png` — Remote vs Hybrid vs On-site breakdown
-- `top_companies.png` — Top hiring companies
-- `job_categories.png` — Popular job titles
-
-**Business insights**
-
-See [docs/business_insights.md](docs/business_insights.md) for a recruiter-friendly one-page report with totals, top skills, hiring companies, locations, remote trends, and salary summary where available.
-
-**Key features (bullet list for recruiters)**
-
-- Data ingestion from public API (RemoteOK) with retries and raw archival.
-- Robust transform layer: normalization, salary parsing, seniority detection, skill extraction.
-- Warehouse design: dim_company, dim_job, dim_location, dim_skill, dim_date + facts.
-- Idempotent upserts using SQLAlchemy (Postgres) and a SQLite demo fallback.
-- Data quality framework that generates JSON reports and summary metrics.
-- Exports and visuals prepared for business stakeholders and Power BI.
-
-**Technology stack**
-
-- Python (ETL orchestration) — pandas, SQLAlchemy, psycopg2
-- PostgreSQL (production warehouse) — schema & migrations provided
-- SQLite (local demo) — reproducible demo without infra
-- CSV / PNG exports — ready for Power BI or slide decks
-
-**ETL Workflow (high level)**
-
-1. Extract: fetch listings, save raw JSON.
-2. Transform: clean fields, extract skills, classify remote and seniority.
-3. Quality: run validation checks and produce `quality_report.json`.
-4. Load: upsert dimensions and load fact tables (Postgres or SQLite demo).
-5. Export: CSVs for dashboards and summary artifacts for recruiters.
-
-**Data Quality Framework (what recruiters should know)**
-
-- The pipeline computes a quality score and detailed counts (nulls, duplicates, invalid salaries).
-- All numeric and NumPy types are converted to native Python types for portable JSON outputs.
-
-**Sample SQL queries (for analytics interviews)**
-
-- Top skills:
-	- `SELECT ds.skill_name, COUNT(*) FROM dim_skill ds JOIN fact_job_skills fjs ON ds.skill_key = fjs.skill_key GROUP BY ds.skill_name ORDER BY 2 DESC LIMIT 20;`
-- Remote distribution:
-	- `SELECT dl.remote_type, COUNT(*) FROM fact_job_postings fp JOIN dim_location dl ON fp.location_key = dl.location_key GROUP BY dl.remote_type;`
-
-**Resume bullet points**
-
-- Built an end-to-end ETL pipeline that ingests job postings, extracts skills, and loads a dimensional warehouse supporting analytics and dashboards.
-- Implemented idempotent dimension upserts and a many-to-many skills fact table for accurate skill demand analysis.
-- Added a data quality framework producing JSON reports, visual artifacts, and Power BI-ready CSV exports.
-
-**Interview questions & answers (brief)**
-
-- Q: How do you ensure idempotency when loading dimensions? A: Use unique business keys and upserts (Postgres ON CONFLICT) for deterministic dimension inserts/updates.
-- Q: How do you handle missing salary data? A: Compute coverage; skip misleading salary charts when coverage is low and surface a message in quality report.
+* Which technical skills are most in demand?
+* Which cities have the highest hiring activity?
+* Which companies are hiring the most?
+* How complete and trustworthy is the collected data?
+* What hiring trends can be identified from the market?
 
 ---
 
-If you'd like, I can also produce a one-page PDF slide (PNG snapshots + short narrative) suitable for LinkedIn or GitHub project featured images.
+# Dashboard Preview
 
-## Sample Insights
+## Executive Overview
 
-### Top Skills
+![Executive Overview](media/Executive_Overview.png)
 
-![Top Skills](docs/releases/latest/screenshots/top_skills.png)
+Provides a high-level snapshot of the Pakistan job market including:
 
-### Hiring by City
+* Total Jobs
+* Total Skills Identified
+* Total Companies Hiring
+* Total Cities Represented
 
-![City Distribution](docs/releases/latest/screenshots/city_distribution.png)
+---
 
-### Top Companies
+## Skill Demand Analysis
 
-![Top Companies](docs/releases/latest/screenshots/top_companies.png)
+![Skill Demand Analysis](media/Skill_Demand_Analysis.png)
+
+Ranks the most requested technologies and skills extracted from job descriptions.
+
+Key Findings:
+
+* TypeScript
+* JavaScript
+* SQL
+* Python
+* Cloud Technologies
+
+---
+
+## Geographic Hiring Trends
+
+![Geographic Hiring Trends](media/Geographic_Hiring_Trends.png)
+
+Visualizes hiring activity across major Pakistani cities and regional demand distribution.
+
+---
+
+## Employer Activity
+
+![Employer Activity](media/Employer_Activity.png)
+
+Highlights the most active hiring organizations and recruitment patterns.
+
+---
+
+## Data Quality Monitoring
+
+![Data Quality Monitoring](media/Data_Quality_&_Monitoring.png)
+
+Tracks:
+
+* Total Postings
+* Posts With Skills
+* Skill Coverage %
+* Data Quality Status
+* Pipeline Run Date
+
+This layer demonstrates data governance and observability practices often missing from portfolio projects.
+
+---
+
+## KPI Analytics
+
+![Data Quality & KPIs](media/Data_Quality_&_KPIs.png)
+
+Advanced KPI monitoring including:
+
+* Top Skill Share %
+* Average Jobs Per City
+* Skill-specific demand metrics
+
+---
+
+# Architecture
+
+## ETL Pipeline
+
+![Pipeline](media/pipeline.py.png)
+
+```text
+RemoteOK API
+      ↓
+Raw JSON Storage
+      ↓
+Staging Layer
+      ↓
+Transformation & Skill Extraction
+      ↓
+Data Quality Validation
+      ↓
+SQLite / PostgreSQL Warehouse
+      ↓
+SQL Analytics Views
+      ↓
+Power BI Dashboards
+```
+
+---
+
+# Technical Stack
+
+### Programming & Processing
+
+* Python
+* Pandas
+* NumPy
+
+### Data Engineering
+
+* SQLAlchemy
+* PostgreSQL
+* SQLite
+* DBT (Seeds & Analytics Layer)
+
+### Data Collection
+
+* Requests
+* BeautifulSoup4
+* Playwright (optional)
+
+### Data Quality & Transformation
+
+* FTFY
+* RapidFuzz
+* Pydantic
+
+### Configuration & Automation
+
+* Python-Dotenv
+* Schedule
+
+### Analytics & Visualization
+
+* Power BI
+* SQL Analytics Views
+* PNG Reporting Artifacts
+
+### Testing
+
+* Pytest
+
+---
+
+# Data Warehouse Design
+
+Star Schema consisting of:
+
+### Dimension Tables
+
+* dim_company
+* dim_job
+* dim_location
+* dim_skill
+* dim_date
+
+### Fact Tables
+
+* fact_job_postings
+* fact_job_skills
+
+Features:
+
+* Surrogate Keys
+* Primary / Foreign Key Relationships
+* Analytics Views
+* Idempotent Upserts
+* Data Quality Validation
+
+---
+
+# Key Features
+
+✅ Automated job posting ingestion
+
+✅ Skill extraction from descriptions
+
+✅ Location normalization
+
+✅ Data quality monitoring framework
+
+✅ Star-schema warehouse design
+
+✅ SQL analytics layer
+
+✅ Power BI dashboards
+
+✅ Recruiter-ready business reporting
+
+✅ SQLite demo environment
+
+✅ PostgreSQL production support
+
+---
+
+# Results
+
+## Dataset Summary
+
+| Metric                 | Value  |
+| ---------------------- | ------ |
+| Total Jobs             | 121    |
+| Total Skills Extracted | 520    |
+| Total Companies        | 11     |
+| Total Cities           | 11     |
+| Skill Coverage         | 99.17% |
+| Data Quality Status    | PASS   |
+
+---
+
+# Running the Project
+
+## Setup
+
+```bash
+pip install -r requirements.txt
+```
+
+## Run ETL Pipeline
+
+```bash
+python run_pipeline.py
+```
+
+## Demo Mode (SQLite)
+
+```bash
+python scripts/demo_run.py
+```
+
+## Generate Reports
+
+```bash
+python scripts/generate_business_insights.py
+```
+
+---
+
+# Project Structure
+
+```text
+connectors/      Data ingestion
+etl/             ETL pipeline
+sql/             Warehouse schema & views
+scripts/         Utilities & reporting
+docs/            Architecture & reports
+media/           Dashboard screenshots
+tests/           Unit tests
+```
+
+---
+
+# Portfolio Highlights
+
+* Designed and implemented an end-to-end ETL platform
+* Built a dimensional warehouse using star-schema modeling
+* Developed data quality monitoring and governance metrics
+* Created Power BI dashboards for executive reporting
+* Automated analytics artifact generation
+* Produced recruiter-friendly business insights from raw job market data
+
+---
+
+## Author
+
+Hooria Amir
+
+Software Engineer | Data Engineering | Analytics Engineering | Business Intelligence
+
+Open to opportunities in:
+
+* Data Engineering
+* Analytics Engineering
+* Business Intelligence
+* Data Analytics
+* Software Engineering
