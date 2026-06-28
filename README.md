@@ -381,6 +381,13 @@ pip install -r requirements.txt
 python run_pipeline.py
 ```
 
+## Interactive Dashboard
+
+```bash
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
+
 ## Demo Mode (SQLite)
 
 ```bash

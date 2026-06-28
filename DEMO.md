@@ -8,6 +8,12 @@ Quick start (run the whole pipeline)
 python run_pipeline.py
 ```
 
+Interactive dashboard
+
+```bash
+streamlit run streamlit_app.py
+```
+
 What to show and say (2–3 minute script)
 
 1) Raw data layer — immutable archive
