@@ -49,7 +49,7 @@ The platform collects job postings from Rozee.pk and other public job sources, e
 
 ### Executive Overview
 
-![Demo Video](media/Demo.mp4)
+![Demo Video Youtube Link](https://youtu.be/j7RKeEzvwmE)
 
 ---
 
