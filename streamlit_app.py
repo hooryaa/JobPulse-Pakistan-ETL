@@ -15,7 +15,27 @@ INSIGHTS_PATH = ROOT / 'reports' / 'latest' / 'insights_summary.json'
 
 def load_staging_data() -> pd.DataFrame:
     if not STAGING_PATH.exists():
-        return pd.DataFrame()
+        # Return a small synthetic demo dataset so deployed apps without staging data still render
+        demo = [
+            {
+                'posting_id': 'demo-1', 'source': 'demo', 'title': 'Data Analyst', 'company': 'DemoCorp',
+                'city': 'Karachi', 'province': 'Sindh', 'country': 'Pakistan', 'normalized_location': 'Karachi',
+                'salary_min': 50000, 'salary_max': 100000, 'salary_currency': 'PKR', 'salary_period': 'monthly',
+                'skills': 'SQL;Python;Power BI', 'content_hash': '', 'raw_path': '', 'fetched_at': ''
+            },
+            {
+                'posting_id': 'demo-2', 'source': 'demo', 'title': 'Backend Developer', 'company': 'DemoTech',
+                'city': 'Lahore', 'province': 'Punjab', 'country': 'Pakistan', 'normalized_location': 'Lahore',
+                'salary_min': 80000, 'salary_max': 150000, 'salary_currency': 'PKR', 'salary_period': 'monthly',
+                'skills': 'TypeScript;Node.js;AWS', 'content_hash': '', 'raw_path': '', 'fetched_at': ''
+            },
+        ]
+        df = pd.DataFrame(demo)
+        df['skills'] = df['skills'].astype(str)
+        df['skill_list'] = df['skills'].str.split(';').apply(lambda values: [s.strip() for s in values if s.strip()])
+        df['skills_search'] = df['skills'].str.lower()
+        df['salary_avg'] = df[['salary_min', 'salary_max']].mean(axis=1)
+        return df
 
     df = pd.read_csv(STAGING_PATH)
     df.columns = [c.strip() for c in df.columns]
@@ -40,8 +60,29 @@ def load_insights() -> dict:
 
 
 def build_skill_counts(df: pd.DataFrame) -> pd.Series:
-    skills = [skill for skills in df['skill_list'] for skill in skills]
-    return pd.Series(Counter(skills)).sort_values(ascending=False)
+    # Defensive: handle empty dataframe or missing columns
+    if df is None or df.empty:
+        return pd.Series(dtype=int)
+    # Prefer precomputed `skill_list` column when available
+    if 'skill_list' in df.columns:
+        all_skills = []
+        for skills in df['skill_list']:
+            if not skills:
+                continue
+            try:
+                for skill in skills:
+                    if skill:
+                        all_skills.append(skill)
+            except TypeError:
+                # unexpected non-iterable value
+                continue
+        return pd.Series(Counter(all_skills)).sort_values(ascending=False)
+    # Fallback: parse `skills` text column
+    if 'skills' in df.columns:
+        skills_series = df['skills'].fillna('').astype(str).str.split(';').explode()
+        skills_series = skills_series.str.strip().replace('', pd.NA).dropna()
+        return skills_series.value_counts()
+    return pd.Series(dtype=int)
 
 
 def filter_jobs(df: pd.DataFrame, selected_cities, selected_companies, selected_skills, text_search, salary_range):
@@ -219,4 +260,25 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as e:
+        # Attempt to record traceback to a log file for Streamlit Cloud logs
+        import traceback, os
+        tb = traceback.format_exc()
+        logs_dir = Path('logs')
+        try:
+            logs_dir.mkdir(parents=True, exist_ok=True)
+            (logs_dir / 'streamlit_error.log').write_text(tb, encoding='utf-8')
+        except Exception:
+            pass
+        # If Streamlit is available, show a friendly error message
+        try:
+            import streamlit as _st
+            _st.error('An unexpected error occurred — details written to logs/streamlit_error.log')
+            _st.exception(e)
+        except Exception:
+            # Not running within Streamlit UI
+            print('Error in streamlit_app:', e)
+            print(tb)
+        raise
