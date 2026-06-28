@@ -49,6 +49,12 @@ The platform collects job postings from Rozee.pk and other public job sources, e
 
 ### Executive Overview
 
+![Demo Video](media/Demo.mp4)
+
+---
+
+### Executive Overview
+
 ![Executive Overview](media/Executive_Overview.png)
 
 Provides a high-level snapshot of:
